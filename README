@@ -1,1 +1,39 @@
 This project is a variant of the Game of Life algorithm
+
+//Makfile
+CC = gcc
+LDC = gcc
+LD_FLAGS = 
+FLAGS = 
+PROG= test.cx
+RM= /bin/rm
+OBJS= test.o
+
+#all rule
+all: $(PROG)
+
+
+$(PROG):$(OBJS)
+	$(LDC) $^ $(LD_FLAGS) -o $(PROG)
+
+%C.o: %.c
+	$(CC) -c $^ $(FLAGS) -o $<
+
+
+
+#clean rule
+clean:
+	$(RM) -rf *.o $(PROG) *.mod
+  
+  
+  ///PBS
+  #!/bin/bash
+#PBS -l nodes=5:ppn=12,walltime=00:00:10
+#PBS -q batch
+#PBS -N run_skel
+#PBS -j oe
+#PBS -V
+
+#cat $PBS_NODEFILE
+cd ~/FinalProject
+mpiexec -np 5 --map-by ppr:1:node --hostfile $PBS_NODEFILE ./test.cx
